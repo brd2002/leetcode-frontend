@@ -4,6 +4,8 @@ import viteLogo from '/vite.svg'
 import './App.css'
 import NavBar from "./Components/NavBar.jsx";
 import MainHeroSection from "./Components/Hero-Components/MainHeroSection.jsx";
+import ProgrammingLanguageClock from "./Components/MidSection-Component/MidSection.jsx";
+
 
 function App() {
   return (
@@ -11,8 +13,9 @@ function App() {
        <div className="">
            <NavBar />
            <MainHeroSection/>
-           {/*<h1 className="font-[Monolisa]"> Hello world</h1>*/}
+           <ProgrammingLanguageClock/>
        </div>
+
    </>
   )
 }

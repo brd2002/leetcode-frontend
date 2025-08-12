@@ -8,20 +8,20 @@ function RightHeroSection(props) {
 }
 
 console.log(fibonacci(10));`);
-
-    const [language, setLanguage] = useState('cpp');
+    const [language, setLanguage] = useState('javascript');
     const [theme, setTheme] = useState('vs-dark');
     const [fontSize, setFontSize] = useState(14);
     const editorRef = useRef(null);
-
     const languages = [
         { value: 'javascript', label: 'JavaScript' },
         { value: 'typescript', label: 'TypeScript' },
         { value: 'python', label: 'Python' },
         { value: 'java', label: 'Java' },
         { value: 'cpp', label: 'C++' },
-        { value: 'html', label: 'HTML' },
-        { value: 'css', label: 'CSS' },
+        { value: 'rust', label: 'Rust' },
+        { value: 'cpp', label: 'C++' },
+        // { value: 'html', label: 'HTML' },
+        // { value: 'css', label: 'CSS' },
         { value: 'json', label: 'JSON' },
         { value: 'markdown', label: 'Markdown' },
     ];
@@ -36,22 +36,87 @@ console.log(fibonacci(10));`);
         editorRef.current = editor;
 
         // Add custom theme
-        // monaco.editor.defineTheme('DesiUi', {
-        //     // // base: 'vs-dark',
-        //     // inherit: true,
-        //     // rules: [
-        //     //     { token: 'comment', foreground: '6A9955' },
-        //     //     { token: 'keyword', foreground: '569CD6' },
-        //     //     { token: 'string', foreground: 'CE9178' },
-        //     // ],
-        //     // colors: {
-        //     //     'editor.background': '#1E1E1E',
-        //     //     'editor.foreground': '#D4D4D4',
-        //     //     'editorLineNumber.foreground': '#858585',
-        //     // }
-        // });
+        monaco.editor.defineTheme('myCustomTheme', {
+            base: 'vs-dark',
+            inherit: true,
+            rules: [
+                { token: 'comment', foreground: '6A9955' },
+                { token: 'keyword', foreground: '569CD6' },
+                { token: 'string', foreground: 'CE9178' },
+            ],
+            colors: {
+                'editor.background': '#1E1E1E',
+                'editor.foreground': '#D4D4D4',
+                'editorLineNumber.foreground': '#858585',
+            }
+        });
 
         // Configure auto-completion
+        // this is for cpp languange
+        monaco.languages.registerCompletionItemProvider('cpp' , {
+            provideCompletionItems :(model, position) => {
+                const suggestions = [
+                    {
+                        label: 'using',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'using namespace std;',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Namespace standard '
+                    },
+                    {
+                        label: 'main',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: "#include<bits/stdc++.h>\nusing namespace std; \nint main(){\n    ${1:expr}\n}",
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Output to standard stream (iostream)'
+                    },
+                    {
+                        label: 'cout',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'cout << ${1:expr} <<endl;',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Output to standard stream (iostream)'
+                    },
+                    {
+                        label: 'fori',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'for (int ${1:i} = 0; ${1:i} < ${2:n}; ++${1:i}) {\\n\t${3:// body}\\n}',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'for loop (index-based)'
+                    },
+                    {
+                        label: 'rangefor',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'for (auto& ${1:elem} : ${2:container}) {\\n\t${3:// body}\\n}',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Range-based for loop (C++11+)'
+                    },
+                    {
+                        label: 'func',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '${1:void} ${2:funcName}(${3:void}) {\\n\t${4:// body}\\n}',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'Function definition'
+                    },
+                    {
+                        label: 'vector',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: 'std::vector<${1:int}> ${2:v};',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: 'std::vector declaration'
+                    },
+                    {
+                        label: 'include',
+                        kind: monaco.languages.CompletionItemKind.Snippet,
+                        insertText: '#include <${1:iostrean}>',
+                        insertTextRules: monaco.languages.CompletionItemInsertTextRule.InsertAsSnippet,
+                        documentation: '#include header'
+                    }
+                ];
+                return {suggestions}
+            }
+        })
+        // this is for javascript
         monaco.languages.registerCompletionItemProvider('javascript', {
             provideCompletionItems: (model, position) => {
                 const suggestions = [
@@ -122,45 +187,31 @@ console.log(fibonacci(10));`);
         <div className="advanced-code-editor">
             <div className="editor-header">
                 <div className="flex gap-2 items-center ">
-                    <div className="dropdown dropdown-bottom">
-                        <div tabIndex={0} role="button" className="btn m-1">Language</div>
-                        <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                            {/*<li><a>Item 1</a></li>*/}
-                            {/*<li><a>Item 2</a></li>*/}
-                            {languages.map(lang => (
-                                <li key={lang.value} value={lang.value}>
-                                    <a>{lang.label}</a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    {/*<select*/}
-                    {/*    value={language}*/}
-                    {/*    onChange={(e) => setLanguage(e.target.value)}*/}
-                    {/*    className="control-select"*/}
-                    {/*>*/}
+                    <fieldset className="fieldset">
+                        <legend className="fieldset-legend">Languages</legend>
+                        <select value={language} defaultValue="Pick a language" className="select" onChange={(e) => setLanguage(e.target.value)}>
+                            <option disabled={true}>Pick a Theme</option>
+                            {
+                                languages.map(lan => (
+                                    <option key={lan.value} value={lan.value}>{lan.label}</option>
+                                ))
+                            }
+                        </select>
+                        <span className="label">Optional</span>
+                    </fieldset>
 
-                    {/*</select>*/}
-
-                    <div className="dropdown dropdown-bottom">
-                        <div tabIndex={0} role="button" className="btn m-1">Theme</div>
-                        <ul tabIndex={0} className="dropdown-content menu bg-base-100 rounded-box z-1 w-52 p-2 shadow-sm">
-                            {/*<li><a>Item 1</a></li>*/}
-                            {/*<li><a>Item 2</a></li>*/}
-                            {themes.map(t => (
-                                <li key={t.value} value={t.value}>
-                                    <a>{t.label}</a>
-                                </li>
-                            ))}
-                        </ul>
-                    </div>
-                    {/*<select*/}
-                    {/*    value={theme}*/}
-                    {/*    onChange={(e) => setTheme(e.target.value)}*/}
-                    {/*    className="control-select"*/}
-                    {/*>*/}
-
-                    {/*</select>*/}
+                    <fieldset className="fieldset">
+                        <legend className="fieldset-legend">Themes</legend>
+                        <select value={theme} defaultValue="Pick a browser" className="select" onChange={(e) => setTheme(e.target.value)}>
+                            <option disabled={true}>Pick a Theme</option>
+                            {
+                                themes.map(theme => (
+                                    <option key={theme.value} value={theme.value}>{theme.label}</option>
+                                ))
+                            }
+                        </select>
+                        <span className="label">Optional</span>
+                    </fieldset>
 
                     <input
                         type="range"
@@ -178,7 +229,7 @@ console.log(fibonacci(10));`);
             </div>
 
             <Editor
-                className="h-screen"
+                className="h-[700px] w-screen"
                 language={language}
                 value={code}
                 theme={theme}
@@ -186,6 +237,7 @@ console.log(fibonacci(10));`);
                 onMount={handleEditorDidMount}
                 options={{
                     fontSize,
+                    fontFamily: 'Monolisa',
                     selectOnLineNumbers: true,
                     roundedSelection: false,
                     readOnly: false,

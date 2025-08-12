@@ -4,8 +4,8 @@ import RightHeroSection from "./RightHeroSection.jsx";
 
 function MainHeroSection(props) {
     return (
-        <div className="flex h-screen">
-            <div className="w-1/2">
+        <div className="flex">
+            <div className="w-1/2 ">
                 <LeftHeroSection />
             </div>
             <div className="w-1/2 p-5">
