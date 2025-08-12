@@ -5,17 +5,18 @@ import './App.css'
 import NavBar from "./Components/NavBar.jsx";
 import MainHeroSection from "./Components/Hero-Components/MainHeroSection.jsx";
 import ProgrammingLanguageClock from "./Components/MidSection-Component/MidSection.jsx";
+import FooterComponent from "./Components/FooterSection/FooterComponent.jsx";
 
 
 function App() {
   return (
    <>
-       <div className="">
-           <NavBar />
-           <MainHeroSection/>
-           <ProgrammingLanguageClock/>
-       </div>
-
+           <div className="w-full">
+               <NavBar />
+               <MainHeroSection />
+               <ProgrammingLanguageClock/>
+               <FooterComponent/>
+           </div>
    </>
   )
 }
